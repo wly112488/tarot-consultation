@@ -15,6 +15,17 @@ description: Use when a tarot spread and its positions are fixed and cards need 
 
 用户已选数字抽牌时，不要再提问抽牌方法。
 
+## Client focus — 数字抽牌前的情感引导
+
+数字抽牌的 `prepare` 成功并锁定牌序与正逆位后，**索取数字之前**，根据本轮已确认的主题和问题，用一至两句话自然引导客户关注自己想探索的事情，再邀请其选择 N 个不重复的 1–78 数字。引导应具体而简短，不额外索取私人背景或要求再次确认。
+
+- **感情与关系**：回想关心的关系，以及自己想理解的问题。
+- **事业与工作**：关注当前工作处境，以及期待怎样的发展或改变。
+- **学业与考试**：关注学习状态、遇到的困难，或希望实现的目标。
+- **其他主题**：围绕客户已经明确的问题作相应引导，不臆造个人经历。
+
+这是帮助客户专注的可选体验，不是改变牌序、正逆位或随机结果的仪式。客户已经直接提供有效数字时，立即按既有状态执行 `reveal`，不补问、不强制完成引导。
+
 ## Executable integration — actually call the program
 
 运行需要一个**能执行 Python 3 的工具环境**及持久保存 JSON 状态文件的工作目录。若仓库已挂载/检出，可执行下列命令；若 GitHub 文件只在连接器中可读取，应先**实际读取** `skills/draw/scripts/tarot_shuffle.py`，把原文放入可执行工具的文件系统，再执行；GitHub 读取操作本身不是代码执行。
@@ -27,7 +38,7 @@ python skills/draw/scripts/tarot_shuffle.py prepare --state .tarot-state/round-1
 
 程序自动从执行环境当前时钟读取 Unix 毫秒时间戳，执行 SHA-256 计数流 + 无偏拒绝采样 + Fisher–Yates 洗牌，单独计算 78 个正逆位（正逆位各 50%），保存 `version`、`timestamp_ms`、`deck_ids`、`orientation_by_position`、`used_positions` 和 `commitment`。无第三方依赖。得到 `status=ready` 才算成功；**先保存状态，再请客户报数**。不要把内部状态、算法、编号与完整牌序主动展示给客户。
 
-提示客户：“牌已经洗好了，请给我 N 个不重复的 1–78 数字。”
+提示客户时依照上方 **Client focus** 的主题化引导，并告知：“牌已经洗好了，请给我 N 个不重复的 1–78 数字。”
 
 当客户提供数字 `48、31、44、35、34`（N=5）时，**必须使用已经存在的同一个状态文件**：
 
