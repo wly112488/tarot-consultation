@@ -62,4 +62,4 @@ python skills/draw/scripts/tarot_shuffle.py verify --state .tarot-state/round-1.
 
 ## Exit / Next
 
-牌面、牌位、正逆位和抽牌来源已锁定。**REQUIRED NEXT SKILL:** 读取 `skills/interpret/SKILL.md`。
+牌面、牌位、正逆位和抽牌来源已锁定后，**立即实际读取** `skills/interpret/SKILL.md` 并在同一轮回应中进入其默认初解（逐牌基础解释 → 牌间关系 → 整体判断）；不能只展示牌面清单后停住，或让客户额外回复“继续”才解读。客户已明确要求逐张翻牌或仅看牌面时尊重其选择。**REQUIRED NEXT SKILL:** 读取 `skills/interpret/SKILL.md`。
