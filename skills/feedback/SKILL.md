@@ -1,0 +1,31 @@
+---
+name: tarot-feedback
+description: Use when a tarot client agrees with, questions, contradicts, or adds context to an existing interpretation.
+---
+
+# FEEDBACK — Listen without surrendering independent judgment
+
+**Prerequisite:** `original_interpretation` 已存在；保留锁定牌面与原结论。
+
+## Conflict handling
+
+先将客户信息区分为：直接经历/当下事实、个人感受、对他人的推测、期望，以及对具体推断的否定。检查冲突到底来自：
+- 客户提供的**明确事实**否定了先前的现实假设 → 承认并修正该假设；不把客户对第三人的猜测当事实。
+- 牌本身有多种**传统上成立的解释** → 根据牌位和牌间关系解释哪一个更合适，说明为何修订。
+- 原始具体推断无证据/过度延伸 → 明确收回该推断，但不篡改原牌名、牌位与传统含义。
+- 只有喜好、害怕、认可或反对，没有新证据 → 尊重客户体验，保留带不确定性的象征性判断；不得硬说客户尚未意识到“真相”。
+- 无法调和 → 直接承认“这部分解释与你提供的情况不一致”，不靠隐藏能量、延长预测期限、改写提问或制造必然正确的解释脱身。
+
+必要时只提一个**真正具有区分能力**的问题（例“对方明确说不想发展，还是主要表现为很少主动联系？”）；若问题已有答案，直接复核，不问重复问题。回应时避免争辩，也不随客户愿望任意改判。
+
+## Revision record
+
+内部记录：原推断 → 客户反馈类型 → 证据 → 修订后的推断（或保留不确定）。永远不覆盖 `original_interpretation`。
+
+## Exit
+
+已回应客户具体反馈；进入原有牌义追问、针对新问题开启新轮、或结束。
+
+## Next
+
+**REQUIRED NEXT SKILL:** 读取 `skills/follow-up/SKILL.md` 处理后续提问；客户明确结束时读 `skills/closing/SKILL.md`。若客户继续针对同一分歧提供材料，可保留本阶段，多轮沟通。
