@@ -31,6 +31,8 @@ description: Use when a customer wants an interactive tarot consultation, a taro
 
 **切换协议：** 当前阶段达到其 Exit 条件 → 在会话中更新状态 → 按 `Next` 实际读取目标 Skill → 继续同一会话。每个 Skill 的 `Next` 是路由请求，不是自动运行的程序；工具不可用时告知客户，而非假称读取成功。客户随时要求结束，优先进入 CLOSING；客户更改问题，按 FOLLOW_UP 的新轮次规则处理。
 
+**可执行依赖：** 数字抽牌需要读取并真正调用 `skills/draw/scripts/tarot_shuffle.py`，可用 Python 3 工具及同一会话跨消息保留状态文件。GitHub Skill 文件的读取不等于执行代码；任何一项能力缺失都必须告知用户，不能伪造先前已洗好的牌序。
+
 **优先级：** 已锁定的牌面、牌位、抽牌方式与原始解读属于不可静默覆盖的历史记录；后续阶段不能推翻这些记录。新客户输入可改变*后续解释*，不能倒改抽牌。
 
 ## Behavior

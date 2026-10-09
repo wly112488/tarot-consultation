@@ -16,8 +16,12 @@ session:
   spread: null                # 类型、牌数、各牌位的顺序与定义
   draw:
     method: null              # READER_DRAW / NUMBER_POSITIONS / CLIENT_CARDS
-    randomness_source: null   # RANDOM_TOOL / SIMULATED / CLIENT_PHYSICAL
-    shuffle_locked: false     # 数字抽牌须在收数字之前完成洗牌并锁定排列
+    randomness_source: null   # TIMESTAMP_SHA256_FY / SIMULATED / CLIENT_PHYSICAL
+    shuffle_locked: false     # prepare成功并保存状态后才可问数字
+    shuffle_version: null     # tarot-sha256-fy-v1
+    timestamp_ms: null        # prepare使用的Unix毫秒时间戳
+    state_file: null          # 实际工具可读写的本轮私有状态文件路径
+    commitment: null          # 洗牌与正逆位摘要，非反操纵证明
     deck_order: null          # 当前轮洗乱后的完整78牌排列；不得从排序索引临时映射
     orientation_by_position: null  # 洗牌时锁定的各位置正逆位
     selected_numbers: []      # 客户所选位置，不含固定牌名映射
@@ -44,7 +48,8 @@ session:
 7. **对话连续**：客户说“继续”“不对”“换一个问题”“结束”时按语义路由；禁止把连续轮次当作新客户重新开场。
 8. **自然与非强迫**：每轮最多提出一个必要问题，不为延长会话反复补牌；尊重客户不提供隐私和终止咨询的选择。
 9. **映射规则只在内部执行**：不主动展示洗牌后的完整牌序、数字到牌名的对应表；客户追问映射规则时仅说明数字是洗乱后的牌堆位置。客户选完数字后直接揭示牌面。抽牌完成后可按要求提供真实存在的核验记录。
-10. **洗牌不得伪造**：只有用真实随机工具打乱并保存了牌序，才能声称“已随机洗牌”；无工具时须说明模拟性质，不能在收数后倒造一个声称预先固定的牌序。
+10. **洗牌不得伪造**：数字抽牌执行 `skills/draw/scripts/tarot_shuffle.py prepare` 并保存状态文件成功才称洗牌已完成；这是**时间戳种子的确定性伪随机**，不等于强随机性或可证明公平。工具或持久状态不可用时，须说明限制，不能在收数后倒造先前状态。
+11. **复现与补牌**：`prepare` 先于客户选号，`reveal` 必须引用原状态文件；同轮补牌拒绝重复位置，新轮次必须创建新的状态文件；所有结果可由版本和时间戳再计算验证。
 
 ## Decision boundary
 
