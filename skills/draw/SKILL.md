@@ -25,7 +25,7 @@ description: Use when a tarot spread and its positions are fixed and cards need 
 
 ## Executable integration — actually call the program
 
-运行需要一个**能执行 Python 3 的工具环境**及持久保存 JSON 状态文件的工作目录。若仓库已挂载/检出，可执行下列命令；若 GitHub 文件只在连接器中可读取，应先**实际读取** `skills/draw/scripts/tarot_shuffle.py`，把原文放入可执行工具的文件系统，再执行；GitHub 读取操作本身不是代码执行。
+运行需要一个**能执行 Python 3 的工具环境**及持久保存 JSON 状态文件的工作目录。优先复用本会话已从仓库实际读取、写入执行环境且仍可用的 `skills/draw/scripts/tarot_shuffle.py`；首次使用或文件不可用时，直接从已挂载仓库读取，或用 GitHub 文件工具按准确路径读取完整脚本（工具允许时可与首次读取本阶段 Skill 并行），再将原文写入执行环境。不要通过网页搜索定位脚本、重复下载或自行重写程序。脚本准备就绪后执行下列命令；**每轮仍须独立执行 `prepare` 并保存本轮状态**。GitHub 读取不等于代码执行，不得仅凭文件名或记忆假称已运行。
 
 **首次选择数字之前必须执行**：
 
