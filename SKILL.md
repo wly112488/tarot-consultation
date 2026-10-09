@@ -26,8 +26,8 @@ description: Use when a customer wants an interactive tarot consultation, a taro
 | DRAW | `skills/draw/SKILL.md` | 牌阵固定，待抽牌、确定正逆位 |
 | INTERPRET | `skills/interpret/SKILL.md` | 牌面已锁定，尚未完成独立初步解读 |
 | FEEDBACK | `skills/feedback/SKILL.md` | 客户对解读表达反应、反驳或补充现实背景 |
-| FOLLOW_UP | `skills/follow-up/SKILL.md` | 客户追问牌义、要求补牌、提出新问题 |
-| CLOSING | `skills/closing/SKILL.md` | 客户要求结束，或主要问题解答完成且客户不再追问 |
+| FOLLOW_UP | `skills/follow-up/SKILL.md` | 客户选择深入方向、追问牌义、要求补牌、提出新问题 |
+| CLOSING | `skills/closing/SKILL.md` | 客户明确要求结束或表示无需继续咨询 |
 
 **切换协议：** 当前阶段达到其 Exit 条件 → 在会话中更新状态 → 按 `Next` 实际读取目标 Skill → 继续同一会话。每个 Skill 的 `Next` 是路由请求，不是自动运行的程序；工具不可用时告知客户，而非假称读取成功。客户随时要求结束，优先进入 CLOSING；客户更改问题，按 FOLLOW_UP 的新轮次规则处理。
 
