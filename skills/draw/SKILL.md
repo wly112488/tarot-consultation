@@ -5,7 +5,7 @@ description: Use when a tarot spread and its positions are fixed and cards need 
 
 # DRAW — Deterministic shuffle & selection (Scheme B)
 
-**Prerequisite:** 已经在客户报数之前确定牌阵的牌数和顺序。塔罗牌名清单见 `references/deck.md`，可执行洗牌程序在本 Skill 目录的 `scripts/tarot_shuffle.py`，**必须实际读取并运行程序，不得用语言模型假装已运行**。
+**Prerequisite:** 已经在客户发送数字之前确定牌阵的牌数和顺序。塔罗牌名清单见 `references/deck.md`，可执行洗牌程序在本 Skill 目录的 `scripts/tarot_shuffle.py`，**必须实际读取并运行程序，不得用语言模型假装已运行**。
 
 ## Methods
 
@@ -17,25 +17,29 @@ description: Use when a tarot spread and its positions are fixed and cards need 
 
 ## Customer number choice
 
-`prepare` 已成功、牌序和正逆位锁定后，直接邀请客户自由选择所需数量的数字。向客户的唯一数字选择提示为：
+牌数和牌位固定且采用数字抽牌时，**先向客户展示引导，再在同一次回复中继续执行 `prepare`，不等待客户回复**。准备前的引导为：
 
-> 牌已经洗好了，请从 1–78 中自由选择 N 个互不重复的数字。
+> 把注意力放在刚才的问题上，放慢呼吸，想一想自己真正想了解什么。接着从 1–78 中凭直觉选好 N 个互不重复的数字，可以先输入对话框，但暂时不要发送。等牌组准备好了，你再直接发送。
 
-将 `N` 替换成已确定的牌数。**不提供任何示例数字、推荐号码、预填答案、候选数字组合，也不通过暗示、提问或主题联想引导客户选某些数。** 不主动展示内部洗牌方式或数字映射表。若客户已经直接给出有效数字，跳过邀请，立即使用当前锁定状态取牌。
+仅在 `prepare` 返回 `status=ready` 且状态已保存后，再提示：
+
+> 牌已经准备好了，现在直接发送你输入的 N 个数字即可。
+
+将 `N` 替换成已固定的牌数。引导只帮助客户专注问题，**不得给出示例数字、推荐号码、预填答案、候选组合或其他选号暗示**，不主动展示内部洗牌方式或映射表。若界面不支持在执行工具前展示引导并在同一轮发送就绪提示，则先完成 `prepare`，再一次性给出引导和选号提示，不得声称此前已经展示或正在后台处理。若客户在牌序锁定前提前发送数字，不得事后补做洗牌冒充先前已锁定；须如实说明，并在准备成功后请客户重新确认数字。客户在牌序锁定后直接发送有效数字时，不重复邀请，沿用当前状态取牌。
 
 ## Executable integration — actually call the program
 
 运行需要一个**能执行 Python 3 的工具环境**及持久保存 JSON 状态文件的工作目录。优先复用本会话已从仓库实际读取、写入执行环境且仍可用的 `skills/draw/scripts/tarot_shuffle.py`；首次使用或文件不可用时，直接从已挂载仓库读取，或用 GitHub 文件工具按准确路径读取完整脚本（工具允许时可与首次读取本阶段 Skill 并行），再将原文写入执行环境。不要通过网页搜索定位脚本、重复下载或自行重写程序。脚本准备就绪后执行下列命令；**每轮仍须独立执行 `prepare` 并保存本轮状态**。GitHub 读取不等于代码执行，不得仅凭文件名或记忆假称已运行。
 
-**首次选择数字之前必须执行**：
+**向客户发出可发送数字的提示之前必须执行**：
 
 ```bash
 python skills/draw/scripts/tarot_shuffle.py prepare --state .tarot-state/round-1.json
 ```
 
-程序自动从执行环境当前时钟读取 Unix 毫秒时间戳，执行 SHA-256 计数流 + 无偏拒绝采样 + Fisher–Yates 洗牌，单独计算 78 个正逆位（正逆位各 50%），保存 `version`、`timestamp_ms`、`deck_ids`、`orientation_by_position`、`used_positions` 和 `commitment`。无第三方依赖。得到 `status=ready` 才算成功；**先保存状态，再请客户报数**。不要把内部状态、算法、编号与完整牌序主动展示给客户。
+程序自动从执行环境当前时钟读取 Unix 毫秒时间戳，执行 SHA-256 计数流 + 无偏拒绝采样 + Fisher–Yates 洗牌，单独计算 78 个正逆位（正逆位各 50%），保存 `version`、`timestamp_ms`、`deck_ids`、`orientation_by_position`、`used_positions` 和 `commitment`。无第三方依赖。得到 `status=ready` 才算成功；**先保存状态，再通知客户发送数字**。不要把内部状态、算法、编号与完整牌序主动展示给客户。
 
-提示客户时只使用上方 **Customer number choice** 的中性文案，不添加任何数字示例、情绪铺垫或选号建议。
+按上方 **Customer number choice** 的两个时点分别展示引导和就绪提示；不得在 `prepare` 成功前声称牌已准备好。
 
 客户给出数字后，**必须使用已经存在的同一个状态文件**调用 `reveal`：将客户提供的全部位置整数按其原始顺序传入 `--numbers`，并用 `--count` 指定已固定的牌数。内部命令参数直接采用客户的实际输入，不自行生成或建议数字；不向客户展示命令。
 
@@ -56,7 +60,7 @@ python skills/draw/scripts/tarot_shuffle.py verify --state .tarot-state/round-1.
 ## Execution boundary
 
 - **无需客户重复提供时间戳**，由 `prepare` 在抽牌前记录，除固定数据的测试/复现外不得使用 `--timestamp-ms` 覆盖当前时间。
-- 客户报数前如果无法实际执行程序、无法读写跨轮状态文件、`prepare` 失败或状态丢失，就不能声称牌已洗好。请客户改用实体牌，或明确说明当前只能进行没有可核验保证的模拟抽牌；**不得在收到数字后新建状态再倒称先洗牌**。
+- 通知客户发送数字前如果无法实际执行程序、无法读写跨轮状态文件、`prepare` 失败或状态丢失，就不能声称牌已洗好。请客户改用实体牌，或明确说明当前只能进行没有可核验保证的模拟抽牌；**不得在收到数字后新建状态再倒称先洗牌**。
 - 不展示数字与牌面对应表，不需要向客户讲种子或散列计算；客户询问抽牌原理时可简短解释“牌序先由时间戳确定，数字只是洗牌后的位置”。
 - `reveal` 运行成功后验证客户数字个数等于牌阵牌位数（补牌则等于新增牌位数），检查牌名与正逆位，设置 `draw.locked=true`，历史结果不许重写。
 
